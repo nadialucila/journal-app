@@ -1,18 +1,18 @@
 import React from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { login, startLogin } from '../../actions/auth';
+import { startGoogleLogin, startLogin } from '../../actions/auth';
 import { useForm } from '../../hooks/useForm';
 
 export const LoginPage = () => {
 
     const dispatch = useDispatch();
+    const {msgError, loading} = useSelector( state => state.ui);
 
-    const [values, handleInputChange, reset] = useForm({
+    const [values, handleInputChange] = useForm({
         email: 'nadia.bergara17@gmail.com',
         pass: '12345'
     });
-
     const {email, pass} = values;
 
     const handleSubmit = (e) => {
@@ -20,10 +20,18 @@ export const LoginPage = () => {
         dispatch(startLogin(email,pass));
     }
 
+    const handleGoogleLogin = () => {
+        dispatch( startGoogleLogin() );
+    }
+
     return (
         <>
             <h3 className='auth__title'> Login </h3>
             <form onSubmit={ handleSubmit }  >
+                { msgError &&
+                    (<div className='auth__alter-error'>
+                        {msgError}
+                    </div>)}
                 <input
                     type="email"
                     value={ email }
@@ -43,6 +51,7 @@ export const LoginPage = () => {
                 <button
                     type='submit'
                     className='btn btn-primary btn-block'
+                    disabled={loading}
                 >
                     Login
                 </button>
@@ -50,6 +59,7 @@ export const LoginPage = () => {
                     <p> Login with google </p>
                     <div
                         className="google-btn"
+                        onClick={handleGoogleLogin}
                     >
                         <div className="google-icon-wrapper">
                             <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
