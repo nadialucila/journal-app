@@ -1,6 +1,7 @@
 import { firebase, googleAuthProvider } from '../firebase/firebase_config';
 import {types} from '../types/types';
-import { finishLoading, removeError, setError, startLoading } from './ui';
+import { finishLoading, startLoading } from './ui';
+import Swal from 'sweetalert2';
 
 export const startLogin = (email,pass) => {
     return (dispatch) => {
@@ -13,10 +14,9 @@ export const startLogin = (email,pass) => {
                 login(user.uid, user.displayName)
             )
             dispatch(finishLoading())
-            dispatch(removeError())
         } )
         .catch( e => {
-            dispatch(setError('Datos inválidos. Inténtelo nuevamente'));
+            Swal.fire('Error', e.message, 'error');
             dispatch(finishLoading())
         })
     }
