@@ -1,4 +1,3 @@
-import { hasSelectionSupport } from '@testing-library/user-event/dist/utils';
 import { firebase, googleAuthProvider } from '../firebase/firebase_config';
 import {types} from '../types/types';
 import { finishLoading, removeError, setError, startLoading } from './ui';
@@ -55,4 +54,15 @@ export const login = (uid, displayName) => ({
         uid,
         displayName
     }
+})
+
+export const startLogout = () => {
+    return async (dispatch) => {
+        await firebase.auth().signOut();
+        dispatch(logout());
+    }
+}
+
+export const logout = () => ({
+    type: types.logout
 })

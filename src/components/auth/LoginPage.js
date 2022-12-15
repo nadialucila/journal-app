@@ -10,8 +10,8 @@ export const LoginPage = () => {
     const {msgError, loading} = useSelector( state => state.ui);
 
     const [values, handleInputChange] = useForm({
-        email: 'nadia.bergara17@gmail.com',
-        pass: '12345'
+        email: 'nadia@gmail.com',
+        pass: '123456'
     });
     const {email, pass} = values;
 
