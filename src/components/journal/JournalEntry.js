@@ -1,28 +1,43 @@
 import React from 'react'
+import moment from 'moment'
+import { useDispatch } from 'react-redux';
+import { activeNote } from '../../actions/notes';
 
-export const JournalEntry = () => {
-  return (
-    <div className='journal__entry pointer'>
-        <div
-            className='journal__entry-picture'
-            style={{
-                backgroundSize: 'cover',
-                backgroundImage: 'url(https://www.creativefabrica.com/wp-content/uploads/2021/03/13/beautiful-landscape-in-sunset-Graphics-9546561-1.jpg)'
-            }}
+export const JournalEntry = ({id, date, title, body, url}) => {
+
+    const dispatch = useDispatch();
+    const noteDate = moment(date);
+    const handleActiveNote = () => {
+        dispatch( activeNote(id, { date, title, body, url} ));
+    }
+
+    return (
+        <div 
+            className='journal__entry pointer'
+            onClick={ handleActiveNote }
         >
+            {    
+                url && 
+                <div
+                    className='journal__entry-picture'
+                    style={{
+                        backgroundSize: 'cover',
+                        backgroundImage: `url(${url})`
+                    }}
+                >
+                </div>}
+            <div className='journal__entry-body'>
+                <p className='journal__entry-title'>
+                    {title}
+                </p>
+                <p className='journal__entry-content'>
+                    {body}
+                </p>
+            </div>
+            <div className='journal__entry-date-box'>
+                <span> { noteDate.format('dddd') } </span>
+                <h4> {noteDate.format('Do') } </h4>
+            </div>
         </div>
-        <div className='journal__entry-body'>
-            <p className='journal__entry-title'>
-                Un nuevo día
-            </p>
-            <p className='journal__entry-content'>
-                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-            </p>
-        </div>
-        <div className='journal__entry-date-box'>
-            <span>Lunes</span>
-            <h4>28</h4>
-        </div>
-    </div>
-  )
+    )
 }

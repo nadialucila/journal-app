@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
 import { JournalPage } from '../components/journal/JournalPage'
-import {AuthRouter} from './AuthRouter'
-import {firebase} from '../firebase/firebase_config'
+import { AuthRouter } from './AuthRouter'
+import { firebase } from '../firebase/firebase_config'
 import { useDispatch } from 'react-redux'
 import { login } from '../actions/auth'
+import { startLoadingNotes } from '../actions/notes'
 
 export const AppRouter = () => {
 
-    const dispatch = useDispatch()
-    const [isLogged, setIsLogged] = useState(false);
+    const dispatch = useDispatch();
+    const [isLogged, setIsLogged] = useState( false );
 
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged( (user) => {
+    useEffect( () => {
+        firebase.auth().onAuthStateChanged( async( user ) => {
 
-            if (user?.uid) {
-                dispatch( login(user.uid, user.displayName) );
-                setIsLogged(true);
+            if ( user?.uid ) {
+                dispatch( login( user.uid, user.displayName ) );
+                setIsLogged( true );
+                dispatch( startLoadingNotes( user.uid ));
             } else {
-                setIsLogged(false);
+                setIsLogged( false );
             }
 
-        } )
+        });
+
     }, [dispatch]);
 
     return (
@@ -30,11 +33,11 @@ export const AppRouter = () => {
                 <Switch>
                     <Route
                         path="/auth"
-                        component={ (isLogged ? (JournalPage):(AuthRouter))}
+                        component={ ( isLogged ? ( JournalPage ):( AuthRouter ))}
                     />
                     <Route
                         path="/journal"
-                        component={ (!isLogged ? (AuthRouter):(JournalPage))}
+                        component={ ( !isLogged ? ( AuthRouter ):( JournalPage ))}
                     />
                     <Redirect to="/auth/login" />
                 </Switch>
