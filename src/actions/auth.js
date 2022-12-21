@@ -2,7 +2,9 @@ import { firebase, googleAuthProvider } from '../firebase/firebase_config';
 import {types} from '../types/types';
 import { finishLoading, startLoading } from './ui';
 import Swal from 'sweetalert2';
+import { notesLogoutCleaning } from './notes';
 
+//LOGIN
 export const startLogin = (email,pass) => {
     return (dispatch) => {
 
@@ -33,6 +35,15 @@ export const startGoogleLogin = () => {
     }
 }
 
+export const login = (uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+});
+
+//REGISTER
 export const startRegister = (email, pass, name) => {
     return (dispatch) => {
         firebase.auth().createUserWithEmailAndPassword(email, pass)
@@ -48,18 +59,14 @@ export const startRegister = (email, pass, name) => {
     }
 }
 
-export const login = (uid, displayName) => ({
-    type: types.login,
-    payload: {
-        uid,
-        displayName
-    }
-})
-
+//LOGOUT
 export const startLogout = () => {
     return async (dispatch) => {
+
         await firebase.auth().signOut();
-        dispatch(logout());
+        
+        dispatch( logout() );
+        dispatch( notesLogoutCleaning() );
     }
 }
 

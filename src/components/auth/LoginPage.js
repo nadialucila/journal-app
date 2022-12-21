@@ -7,17 +7,17 @@ import { useForm } from '../../hooks/useForm';
 export const LoginPage = () => {
 
     const dispatch = useDispatch();
-    const {msgError, loading} = useSelector( state => state.ui);
+    const { loading } = useSelector( state => state.ui);
 
-    const [values, handleInputChange] = useForm({
+    const [ values, handleInputChange ] = useForm({
         email: 'nadia@gmail.com',
         pass: '123456'
     });
-    const {email, pass} = values;
+    const { email, pass } = values;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = ( e ) => {
         e.preventDefault();
-        dispatch(startLogin(email,pass));
+        dispatch( startLogin( email, pass ));
     }
 
     const handleGoogleLogin = () => {
@@ -28,10 +28,6 @@ export const LoginPage = () => {
         <>
             <h3 className='auth__title'> Login </h3>
             <form onSubmit={ handleSubmit }  >
-                { msgError &&
-                    (<div className='auth__alter-error'>
-                        {msgError}
-                    </div>)}
                 <input
                     type="email"
                     value={ email }
@@ -42,7 +38,7 @@ export const LoginPage = () => {
                 />
                 <input
                     type="password"
-                    value={pass}
+                    value={ pass }
                     placeholder='password'
                     name='pass'
                     className='auth__input'
@@ -51,7 +47,7 @@ export const LoginPage = () => {
                 <button
                     type='submit'
                     className='btn btn-primary btn-block'
-                    disabled={loading}
+                    disabled={ loading }
                 >
                     Login
                 </button>
@@ -59,7 +55,7 @@ export const LoginPage = () => {
                     <p> Login with google </p>
                     <div
                         className="google-btn"
-                        onClick={handleGoogleLogin}
+                        onClick={ handleGoogleLogin }
                     >
                         <div className="google-icon-wrapper">
                             <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />

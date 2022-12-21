@@ -4,6 +4,7 @@ import { fileUpload } from "../helpers/fileUpload";
 import { loadNotes } from "../helpers/loadNotes";
 import { types } from "../types/types";
 
+//NEW NOTE
 export const startNewNote = () => {
     return async ( dispatch, getState ) => {
         const uid = getState().auth.uid;
@@ -16,30 +17,20 @@ export const startNewNote = () => {
 
         const doc = await db.collection( `${ uid }/journal/notes` ).add( newNote );
         dispatch( activeNote( doc.id, newNote ));
+        dispatch( addNewNote( doc.id, newNote ) );
 
     }
 }
 
-export const activeNote = ( id, note ) => ({
-    type: types.notesActive,
+export const addNewNote = ( id, note ) => ({
+    type: types.notesAddNew,
     payload: {
-        id,
+        id, 
         ...note
     }
-});
+})
 
-export const startLoadingNotes = ( uid ) => {
-    return async ( dispatch ) => {
-        const notes = await loadNotes( uid );
-        dispatch( setNotes( notes ));
-    }
-}
-
-export const setNotes = ( notes ) => ({
-    type: types.notesLoad,
-    payload: notes
-});
-
+//SAVE NOTE
 export const startSaveNote = ( note ) => {
     return async ( dispatch, getState ) => {
         const { uid } = getState().auth;
@@ -58,6 +49,29 @@ export const startSaveNote = ( note ) => {
     }
 }
 
+//ACTIVE NOTE
+export const activeNote = ( id, note ) => ({
+    type: types.notesActive,
+    payload: {
+        id,
+        ...note
+    }
+});
+
+//LOADING NOTES
+export const startLoadingNotes = ( uid ) => {
+    return async ( dispatch ) => {
+        const notes = await loadNotes( uid );
+        dispatch( setNotes( notes ));
+    }
+}
+
+export const setNotes = ( notes ) => ({
+    type: types.notesLoad,
+    payload: notes
+});
+
+//UPDATE NOTES
 export const refreshNote = ( id, note ) => ({
     type: types.notesUpdate,
     payload: {
@@ -69,6 +83,7 @@ export const refreshNote = ( id, note ) => ({
     }
 });
 
+//UPLOAD NOTE PIC
 export const startFileUpload = ( file ) => {
     return async( dispatch, getState ) => {
         const { active } = getState().notes;
@@ -89,3 +104,25 @@ export const startFileUpload = ( file ) => {
         Swal.close();
     }
 }
+
+//DELETE NOTE
+export const startDelete = ( id ) => {
+    return async (dispatch, getState) => {
+
+        const { uid } = getState().auth;
+
+        await db.doc(`/${uid}/journal/notes/${id}`).delete()
+        
+        dispatch( deleteNote( id ) )
+    }
+}
+
+export const deleteNote = ( id ) => ({
+    type: types.notesDelete,
+    payload: id
+});
+
+//LOGOUT STATE CLEANING
+export const notesLogoutCleaning = () => ({
+    type: types.notesLogoutCleaning
+})
