@@ -40,8 +40,8 @@ export const setNotes = ( notes ) => ({
     payload: notes
 });
 
-export const startSaveNote = (note) => {
-    return async (dispatch, getState) => {
+export const startSaveNote = ( note ) => {
+    return async ( dispatch, getState ) => {
         const { uid } = getState().auth;
 
         if( !note.url ){
@@ -51,10 +51,7 @@ export const startSaveNote = (note) => {
         const noteToFirestore = { ...note };
         delete noteToFirestore.id;
 
-        await db.doc(`${uid}/journal/notes/${ note.id }`).update( noteToFirestore )
-        .catch( err =>  
-            Swal.fire( 'Error', err, 'error' )
-        );
+        await db.doc(`${ uid }/journal/notes/${ note.id }`).update( noteToFirestore );
 
         dispatch( refreshNote( note.id, noteToFirestore ));
         Swal.fire( 'Saved', note.title, 'success' )
@@ -75,7 +72,20 @@ export const refreshNote = ( id, note ) => ({
 export const startFileUpload = ( file ) => {
     return async( dispatch, getState ) => {
         const { active } = getState().notes;
+
+        Swal.fire({
+            title: 'Uploading', 
+            text: 'please wait...', 
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         const fileURL = await fileUpload( file );
-        console.log( fileURL );
+        active.url = await fileURL;
+        dispatch( startSaveNote( active ))
+
+        Swal.close();
     }
 }

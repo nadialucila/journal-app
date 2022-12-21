@@ -51,7 +51,7 @@ export const NotePage = () => {
                 className='notes__image'
               >
                 <img
-                  src='https://naturedestinations.ca/wp-content/uploads/2019/07/Old-Man-1-1100-600x403.jpg'
+                  src={active.url}
                   alt='Landscape'
                 />
               </div> }

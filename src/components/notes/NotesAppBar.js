@@ -31,6 +31,7 @@ export const NotesAppBar = () => {
         <input 
           id='fileSelector'
           type='file'
+          name='file'
           style={{display: 'none'}}
           onChange={ handleFileChange }
         />
